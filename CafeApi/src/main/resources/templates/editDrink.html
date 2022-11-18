@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Редактирование напитка</title>
+    <script src="/webjars/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    <form action="/">
+        <h3>Информация о напитке</h3>
+        <div>
+            <label for="id">ID:</label>
+            <input id="id" type="text" readonly="readonly" />
+        </div>
+        <div>
+            <label for="name">Название:</label>
+            <input id="name" name="name" type="text" />
+        </div>
+        <div>
+            <label for="description">Описпние:</label>
+            <input id="description" name="description" type="text" />
+        </div>
+        <div>
+            <label for="values">Объем:</label>
+            <table id="values">
+                <tbody>
+                <tr>
+                    <td><input id="S" name="S" type="checkbox" value="S" class="values-checked"></td>
+                    <td>S</td>
+                    <td><input id="S-price" name="S-price" type="number"></td>
+                </tr>
+                <tr>
+                    <td><input id="M" name="M" type="checkbox" value="M" class="values-checked"></td>
+                    <td>M</td>
+                    <td><input id="M-price" name="M-price" type="number"></td>
+                </tr>
+                <tr>
+                    <td><input id="L" name="L" type="checkbox" value="L" class="values-checked"></td>
+                    <td>L</td>
+                    <td><input id="L-price" name="L-price" type="number"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div>
+            <button onclick="saveDrink()" type="submit">Сохранить</button>
+            <a href="/"><button type="button">Отмена</button></a>
+        </div>
+        <script>
+            var checkedValues = [];
+
+            $(function () {
+                var drinkId = getDrinkIdFromUrl();
+                $.get('/api/drink/' + drinkId).done(function (drink) {
+                    $('#id').val(`${drink.id}`);
+                    $('#name').val(`${drink.name}`);
+                    $('#description').val(`${drink.description}`);
+                    for (let i = 0; i < drink.values.length; i++) {
+                        var volume = drink.values[i].volume;
+                        var price = drink.values[i].price;
+
+                        $('#'+volume).prop('checked', true);
+                        $('#'+volume+"-price").val(`${price}`);
+                    }
+                    checkedValues = drink.values;
+                });
+            });
+
+            function saveDrink() {
+                var search = {};
+                search["id"] = $("#id").val();
+                search["name"] = $("#name").val();
+                search["description"] = $("#description").val();
+                search["values"] = getValues();
+
+                    $.ajax({
+                    type: "POST",
+                    contentType: "application/json",
+                    url: "/api/drink/save",
+                    data: JSON.stringify(search),
+                    dataType: 'json'
+                });
+            }
+
+            function getValues() {
+                var values = [];
+                for (let i = 0; i < checkedValues.length; i++) {
+                    var value = {};
+                    value["volume"] = checkedValues[i];
+                    value["price"] = Number($("#"+checkedValues[i]+"-price").val());
+                    values[i] = value;
+                }
+                return values;
+            }
+
+            $(".values-checked").on("change",
+                function () {
+                    const checked = [];
+                    $(".values-checked:checked").each(
+                        function () {
+                            checked.push($(this).val());
+                        }
+                    );
+                    checkedValues = checked;
+                }
+            );
+
+            function getDrinkIdFromUrl() {
+                return location.pathname.replace("/editDrink/", '');
+            }
+        </script>
+    </form>
+</body>
+</html>

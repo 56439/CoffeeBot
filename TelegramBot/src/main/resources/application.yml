@@ -1,0 +1,14 @@
+telegram:
+  bot-name: ${BOT_NAME:TelegramBotName}
+  bot-token: ${BOT_TOKEN:TelegramBotToken}
+spring:
+  application:
+    name: telegram-bot
+server:
+  port: 8081
+
+eureka:
+  client:
+    enabled: true
+    service-url:
+      defaultZone: ${EUREKA_SERVER_URL:http://localhost:8761/eureka}
