@@ -36,7 +36,7 @@ management:
 
 logging:
   file:
-    path: ./cafe-api.log
+    path: ./CafeApi/log
   logback:
     rollingpolicy:
       clean-history-on-start: true
