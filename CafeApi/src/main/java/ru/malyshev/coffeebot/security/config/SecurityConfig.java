@@ -32,6 +32,7 @@ public class SecurityConfig {
                 .antMatchers("/api/drink/save").authenticated()
                 .antMatchers("/api/cafe/save").authenticated()
                 .antMatchers("/api/cafe/delete/*").authenticated()
+                .antMatchers("/actuator/**").authenticated()
                 .anyRequest().permitAll()
             .and()
                 .formLogin()

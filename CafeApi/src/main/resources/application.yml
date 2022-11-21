@@ -11,6 +11,8 @@ spring:
   sql:
     init:
       mode: always
+  jmx:
+    enabled: true
 server:
   port: 8080
 
@@ -22,3 +24,19 @@ eureka:
   instance:
     instance-id: ${spring.application.name}:${server.port}
     prefer-ip-address: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      enabled: true
+
+logging:
+  file:
+    path: ./cafe-api.log
+  logback:
+    rollingpolicy:
+      clean-history-on-start: true
