@@ -1,11 +1,8 @@
 package ru.malyshev.coffeebot.service.impl;
 
-import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import ru.malyshev.coffeebot.dto.OrderDto;
 import ru.malyshev.coffeebot.repo.OrderRepo;
 
@@ -16,15 +13,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static ru.malyshev.coffeebot.TestData.ORDER_1;
 import static ru.malyshev.coffeebot.TestData.ORDER_LIST;
 
-@SpringBootTest
-@Disabled
 class OrderServiceImplTest {
 
-    @Autowired
     private OrderServiceImpl orderService;
 
-    @MockBean
-    private OrderRepo orderRepo;
+    private OrderRepo orderRepo = Mockito.mock(OrderRepo.class);
+
+    @BeforeEach
+    void init() {
+        orderService = new OrderServiceImpl(orderRepo);
+    }
 
     @Test
     void getAll() {

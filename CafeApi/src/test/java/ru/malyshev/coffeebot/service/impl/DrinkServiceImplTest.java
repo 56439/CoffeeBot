@@ -1,14 +1,10 @@
 package ru.malyshev.coffeebot.service.impl;
 
-import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import ru.malyshev.coffeebot.dto.DrinkDto;
 import ru.malyshev.coffeebot.repo.DrinkRepo;
-import ru.malyshev.coffeebot.service.impl.DrinkServiceImpl;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,15 +13,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static ru.malyshev.coffeebot.TestData.DRINK_1;
 import static ru.malyshev.coffeebot.TestData.DRINK_LIST;
 
-@SpringBootTest
-@Disabled
 class DrinkServiceImplTest {
 
-    @Autowired
     private DrinkServiceImpl drinkService;
 
-    @MockBean
-    private DrinkRepo drinkRepo;
+    private DrinkRepo drinkRepo = Mockito.mock(DrinkRepo.class);
+
+    @BeforeEach
+    void init() {
+        drinkService = new DrinkServiceImpl(drinkRepo);
+    }
 
     @Test
     void getAll() {

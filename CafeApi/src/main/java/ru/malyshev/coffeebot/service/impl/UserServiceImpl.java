@@ -41,6 +41,13 @@ public class UserServiceImpl implements UserService {
         userRepo.deleteById(id);
     }
 
+    @Override
+    public UserDto getByChatId(Long chatId) {
+        Optional<User> user = userRepo.findByChatId(chatId);
+        if (user.isEmpty()) return null;
+        return user.get().toDto();
+    }
+
     private List<UserDto> toDtoList(List<User> userList) {
         List<UserDto> userDtoList = new ArrayList<>();
         for (User user : userList) {
@@ -49,10 +56,4 @@ public class UserServiceImpl implements UserService {
         return userDtoList;
     }
 
-    @Override
-    public UserDto getByChatId(Long chatId) {
-        Optional<User> user = userRepo.findByChatId(chatId);
-        if (user.isEmpty()) return null;
-        return user.get().toDto();
-    }
 }

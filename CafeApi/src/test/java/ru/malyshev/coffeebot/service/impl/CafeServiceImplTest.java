@@ -1,11 +1,8 @@
 package ru.malyshev.coffeebot.service.impl;
 
-import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import ru.malyshev.coffeebot.dto.CafeDto;
 import ru.malyshev.coffeebot.repo.CafeRepo;
 
@@ -16,15 +13,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static ru.malyshev.coffeebot.TestData.CAFE_1;
 import static ru.malyshev.coffeebot.TestData.CAFE_LIST;
 
-@SpringBootTest
-@Disabled
 public class CafeServiceImplTest {
 
-    @Autowired
     private CafeServiceImpl cafeService;
 
-    @MockBean
-    private CafeRepo cafeRepo;
+    private CafeRepo cafeRepo = Mockito.mock(CafeRepo.class);
+
+    @BeforeEach
+    void init() {
+        cafeService = new CafeServiceImpl(cafeRepo);
+    }
 
     @Test
     void getAll() {
@@ -41,5 +39,14 @@ public class CafeServiceImplTest {
         CafeDto cafe = cafeService.getById(expected);
 
         assertEquals(expected, cafe.getId());
+    }
+
+    @Test
+    void getByAddress() {
+        String expected = CAFE_1.getAddress();
+        Mockito.when(cafeRepo.findByAddress(expected)).thenReturn(Optional.of(CAFE_1));
+        CafeDto cafe = cafeService.getByAddress(expected);
+
+        assertEquals(expected, cafe.getAddress());
     }
 }
