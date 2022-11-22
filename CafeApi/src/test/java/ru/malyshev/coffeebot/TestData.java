@@ -22,9 +22,11 @@ public class TestData {
 
     // DTO
     public final static CafeDto CAFE_DTO_1 = new CafeDto(1L, "address_1", "coordinates_1");
+    public final static CafeDto CAFE_DTO_2 = new CafeDto(2L, "address_2", "coordinates_2");
+    public final static List<CafeDto> CAFE_DTO_LIST = List.of(CAFE_DTO_1, CAFE_DTO_2);
     public final static DrinkDto DRINK_DTO_1 = new DrinkDto(1L, "drink_1", "descr_1", VALUES_DTO);
-    public final static UserDto USER_DTO_1 = new UserDto(1L, 123L, "user_1");
-    public final static OrderDto ORDER_DTO_1 = new OrderDto(1L, DRINK_DTO_1, VOLUME_S.toString(), USER_DTO_1, CAFE_DTO_1);
+    public final static DrinkDto DRINK_DTO_2 = new DrinkDto(2L, "drink_2", "descr_2", VALUES_DTO);
+    public final static List<DrinkDto> DRINK_DTO_LIST = List.of(DRINK_DTO_1, DRINK_DTO_2);
 
     // MODELS
     public final static Cafe CAFE_1 = new Cafe(1L, "address_1", "coordinates_1");
