@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Редактирование кафе</title>
+    <script src="/webjars/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    <form action="/cafe">
+        <h3>Информация о кафе</h3>
+        <div>
+            <label for="id">ID:</label>
+            <input id="id" type="text" readonly="readonly" />
+        </div>
+        <div>
+            <label for="address">Адрес:</label>
+            <input id="address" name="address" type="text" />
+        </div>
+        <div>
+            <label for="coordinates">Координаты:</label>
+            <input id="coordinates" name="coordinates" type="text" />
+        </div>
+        <div>
+            <button onclick="saveCafe()" type="submit">Сохранить</button>
+            <a href="/cafe"><button type="button">Отмена</button></a>
+        </div>
+    </form>
+    <script>
+        $(function () {
+            var cafeId = getCafeIdFromUrl();
+            $.get('/api/cafe/' + cafeId).done(function (cafe) {
+                $('#id').val(`${cafe.id}`);
+                $('#address').val(`${cafe.address}`);
+                $('#coordinates').val(`${cafe.coordinates}`);
+            });
+        });
+
+        function saveCafe() {
+            var search = {};
+            search["id"] = $("#id").val();
+            search["address"] = $("#address").val();
+            search["coordinates"] = $("#coordinates").val();
+
+            $.ajax({
+                type: "POST",
+                contentType: "application/json",
+                url: "/api/cafe/save",
+                data: JSON.stringify(search),
+                dataType: 'json'
+            });
+        }
+
+        function getCafeIdFromUrl() {
+            return location.pathname.replace("/editCafe/", '');
+        }
+    </script>
+</body>
+</html>

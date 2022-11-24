@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Добавить кафе</title>
+    <script src="/webjars/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+  <form action="/cafe">
+    <h3>Добавление кафе</h3>
+    <div>
+      <label for="address">Адрес:</label>
+      <input id="address" name="address" type="text" placeholder="Введите адрес" required />
+    </div>
+    <div>
+      <label for="coordinates">Координаты:</label>
+      <input id="coordinates" name="coordinates" placeholder="Введите координаты" required />
+    </div>
+    <div>
+      <button onclick="addCafe()" type="submit">Сохранить</button>
+      <a href="/cafe"><button type="button">Отмена</button></a>
+    </div>
+  </form>
+  <script>
+    function addCafe() {
+      var search = {};
+      search["address"] = $("#address").val();
+      search["coordinates"] = $("#coordinates").val();
+
+      $.ajax({
+        type: "POST",
+        contentType: "application/json",
+        url: "/api/cafe/save",
+        data: JSON.stringify(search),
+        dataType: 'json'
+      });
+    }
+  </script>
+</body>
+</html>

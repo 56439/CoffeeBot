@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Добавить напиток</title>
+  <script src="/webjars/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+  <form action="/">
+    <h3>Добавление напитка</h3>
+    <div>
+      <label for="name">Название:</label>
+      <input id="name" name="name" type="text" placeholder="Введите название" required />
+    </div>
+    <div>
+      <label for="description">Описпние:</label>
+      <input id="description" name="description" placeholder="Введите описпние" required />
+    </div>
+    <div>
+      <label for="values">Объем:</label>
+      <table id="values">
+        <tbody>
+          <tr>
+            <td><input name="S" type="checkbox" value="S" class="values-checked" checked></td>
+            <td>S</td>
+            <td><input id="S-price" name="S-price" type="number"></td>
+          </tr>
+          <tr>
+            <td><input name="M" type="checkbox" value="M" class="values-checked"></td>
+            <td>M</td>
+            <td><input id="M-price" name="M-price" type="number"></td>
+          </tr>
+          <tr>
+            <td><input name="L" type="checkbox" value="L" class="values-checked"></td>
+            <td>L</td>
+            <td><input id="L-price" name="L-price" type="number"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <button onclick="addDrink()" type="submit">Сохранить</button>
+      <a href="/"><button type="button">Отмена</button></a>
+    </div>
+  </form>
+  <script>
+    function addDrink() {
+      var search = {};
+      search["name"] = $("#name").val();
+      search["description"] = $("#description").val();
+      search["values"] = getValues();
+
+      $.ajax({
+        type: "POST",
+        contentType: "application/json",
+        url: "/api/drink/save",
+        data: JSON.stringify(search),
+        dataType: 'json'
+      });
+    }
+
+    function getValues() {
+      var values = [];
+      for (let i = 0; i < checkedValues.length; i++) {
+        var value = {};
+        value["volume"] = checkedValues[i];
+        value["price"] = Number($("#"+checkedValues[i]+"-price").val());
+        values[i] = value;
+      }
+      return values;
+    }
+
+    var checkedValues = ["S"];
+    $(".values-checked").on("change",
+      function () {
+        const checked = [];
+        $(".values-checked:checked").each(
+          function () {
+            checked.push($(this).val());
+          }
+        );
+        checkedValues = checked;
+      }
+    );
+  </script>
+</body>
+</html>

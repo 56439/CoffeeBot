@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Список кофеен</title>
+    <script src="/webjars/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<nav>
+    <a href="/">Напитки</a>
+    <a href="/cafe">Кофейни</a>
+    <form action="/logout" method="post">
+        <button type="submit">Выход</button>
+    </form>
+</nav>
+<body>
+    <h3>Кофейни</h3>
+    <div>
+        <a href="/addCafe">Добавить</a>
+    </div>
+    <form action="/cafe">
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Address</th>
+                <th>Coordinates</th>
+            </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </form>
+    <script>
+        $(function () {
+            $.get('/api/cafe/all').done(function (cafes) {
+                cafes.forEach(function (cafe) {
+                    $('tbody').append(`
+                    <tr>
+                        <td>${cafe.id}</td>
+                        <td>${cafe.address}</td>
+                        <td>${cafe.coordinates}</td>
+                        <td>
+                            <a href="/editCafe/${cafe.id}">Изменить</a>
+                        </td>
+                        <td>
+                            <button onclick="deleteCafe(${cafe.id});" type="submit">Удалить</button>
+                        </td>
+                    </tr>
+                    `)
+                })
+            })
+        });
+
+        function deleteCafe(cafeId) {
+            $.post('/api/cafe/delete/' + cafeId);
+        }
+    </script>
+</body>
+</html>
