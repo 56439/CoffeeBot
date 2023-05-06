@@ -1,0 +1,50 @@
+version: "3.9"
+services:
+  telegram-bot:
+    depends_on:
+      - cafe-api
+    container_name: telegram-bot-container
+    build:
+      context: ./TelegramBot
+      dockerfile: Dockerfile
+    ports:
+      - "8082:8080"
+    environment:
+      - BOT_NAME=DrinksMachine
+      - BOT_TOKEN=TOKEN
+      - EUREKA_SERVER_URL=http://eureka-server-container:8761/eureka/
+
+  cafe-api:
+    depends_on:
+      - eureka-server
+    container_name: cafe-api-container
+    build:
+      context: ./CafeApi
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://coffeeBot_DB_container:5432/coffeeBot_DB
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=123
+      - EUREKA_SERVER_URL=http://eureka-server-container:8761/eureka/
+
+  eureka-server:
+    depends_on:
+      - postgres
+    container_name: eureka-server-container
+    build:
+      context: ./EurekaServer
+      dockerfile: DockerFile
+    ports:
+      - "8761:8761"
+
+  postgres:
+    container_name: coffeeBot_DB_container
+    image: postgres:15
+    environment:
+      POSTGRES_DB: coffeeBot_DB
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123
+    ports:
+      - "5432:5432"

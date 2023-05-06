@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Список напитков</title>
+    <script src="/webjars/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<nav>
+    <a href="/">Напитки</a>
+    <a href="/cafe">Кофейни</a>
+    <form action="/logout" method="post">
+        <button type="submit">Выход</button>
+    </form>
+</nav>
+<body>
+    <h3>Напитки</h3>
+    <div>
+        <a href="/addDrink">Добавить</a>
+    </div>
+    <form action="/">
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Values</th>
+                <th>Prices</th>
+            </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </form>
+    <script>
+        $(function () {
+            $.get('/api/drink/all').done(function (drinks) {
+                drinks.forEach(function (drink) {
+                    var drinkValues = drink.values;
+                    var volumes = [];
+                    var prices = [];
+                    for (let i = 0; i < drinkValues.length; i++) {
+                        volumes[i] = drinkValues[i].volume;
+                        prices[i] = drinkValues[i].price;
+                    }
+                    $('tbody').append(`
+                    <tr>
+                        <td>${drink.id}</td>
+                        <td>${drink.name}</td>
+                        <td>${drink.description}</td>
+                        <td>${volumes}</td>
+                        <td>${prices}</td>
+                        <td>
+                            <a href="/editDrink/${drink.id}">Изменить</a>
+                        </td>
+                        <td>
+                            <button onclick="deleteDrink(${drink.id});" type="submit">Удалить</button>
+                        </td>
+                    </tr>
+                    `)
+                })
+            })
+        });
+
+        function deleteDrink(drinkId) {
+            $.post('/api/drink/delete/' + drinkId);
+        }
+    </script>
+</body>
+</html>

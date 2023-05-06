@@ -1,0 +1,42 @@
+spring:
+  application:
+    name: cafe-api
+  datasource:
+    url: jdbc:postgresql://localhost:5432/coffeeBot_DB
+    username: postgres
+    password: 123
+  jpa:
+    generate-ddl: false
+    show-sql: false
+  sql:
+    init:
+      mode: always
+  jmx:
+    enabled: true
+server:
+  port: 8080
+
+eureka:
+  client:
+    enabled: true
+    service-url:
+      defaultZone: ${EUREKA_SERVER_URL:http://localhost:8761/eureka/}
+  instance:
+    instance-id: ${spring.application.name}:${server.port}
+    prefer-ip-address: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      enabled: true
+
+logging:
+  file:
+    path: ./CafeApi/log
+  logback:
+    rollingpolicy:
+      clean-history-on-start: true
